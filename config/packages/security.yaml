@@ -1,0 +1,26 @@
+security:
+    enable_authenticator_manager: true
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    password_hashers:
+        App\Entity\User:
+            # Choisissez l'algorithme de hachage, par exemple, bcrypt
+            algorithm: bcrypt
+            cost: 12
+
+    firewalls:
+        api:
+            stateless: true
+            custom_authenticators:
+                - App\Security\JwtAuthenticator
+            # Ajoutez d'autres paramètres de votre choix
+
+    access_control:
+        # Contrôle d'accès basé sur les rôles
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/profile, roles: ROLE_USER }

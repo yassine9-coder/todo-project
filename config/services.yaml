@@ -1,0 +1,25 @@
+parameters:
+    # Met ici les paramètres qui ne changent pas sur chaque machine
+    jwt.secret_key: '%env(JWT_SECRET_KEY)%' # Assurez-vous que cette variable d'environnement est définie
+    jwt.private_key: '%env(JWT_PRIVATE_KEY)%'
+    jwt.public_key: '%env(JWT_PUBLIC_KEY)%'
+
+services:
+    # Configuration par défaut pour les services dans ce fichier
+    _defaults:
+        autowire: true      # Injection automatique des dépendances
+        autoconfigure: true # Enregistrement automatique des services comme commandes, abonnés aux événements, etc.
+
+    # Rendre les classes dans src/ disponibles comme services
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # Ajout de votre service JWT
+    App\Service\JwtService:
+        arguments:
+            $privateKey: '%jwt.private_key%'
+            $publicKey: '%env(JWT_PUBLIC_KEY)%'
